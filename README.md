@@ -1,9 +1,69 @@
-# AMR-eseResearch
-* Conducted this research under the supervision of Dr. Justin DeBenedetto from the Computer Science Department of Villanova University. 
-* Developed and implemented 4 quantitative metrics in Python to evaluate the presence of translationese, the decrease in the
-natural-sounding of the text, in an AMR-to-text generation system’s output. Used AMR 2.0 as text input for human written vs computer generated text. 
-* The methods are developed based on these research articles: 
-https://arxiv.org/pdf/2304.11501.pdf 
-https://arxiv.org/pdf/2304.11501v1.pdf
-* Based on the metrics designed, measured that the provided computer-generated text contains 12.94% more characteristics
-typical of translationese compared to human-written text.
+# Translationese Detection via Linguistic Feature Engineering and Machine Learning
+
+This project presents a linguistically grounded, computational pipeline for identifying *translationese*—the subtle but systematic linguistic traits that distinguish translated texts from those originally authored in the target language. Conducted under the supervision of **Dr. Justin DeBenedetto** in the Computer Science Department at **Villanova University**, the research integrates linguistic theory with classic machine learning to support transparent and interpretable translation analysis.
+
+## 🧠 Project Overview
+
+- **Goal**: Classify English texts as either *original* or *translated* using interpretable linguistic features.
+- **Motivation**: Translationese often manifests as decreased syntactic complexity, reduced lexical richness, increased cohesion, and structural predictability—traits that impact readability, style, and fluency in machine-generated text.
+- **Approach**: Developed a modular Python pipeline that extracts 10+ handcrafted linguistic features and trains classical classifiers to detect translationese patterns.
+
+## 🔍 Features Engineered
+
+Each feature was implemented as a standalone Python module:
+- **Lexical Diversity**: Type-Token Ratio (TTR), Moving Average TTR (MATTR)
+- **Syntactic Complexity**: Clause depth, clause count, noun phrase count
+- **Cohesion**: Cohesive marker frequency (e.g., "however," "in addition")
+- **Information Theory**: Shannon entropy, burstiness of rare words
+- **Grammatical Structure**: Part-of-speech (POS) distributions, dependency distance
+- Optimized for large-scale processing with **spaCy's `nlp.pipe()`**
+
+## 📊 Dataset & Processing
+
+- Used English sentence pairs from the [CausalMT](https://github.com/EdisonNi-hku/CausalMT) dataset:
+  - `full.en` — original English text (label 0)
+  - `full.transen` — translated English text (label 1)
+- Supported customizable chunk sizes (`--lines-per-sample`) for evaluating sentence vs. multi-sentence input.
+- Data cleaning included:
+  - Dropping sparse features (>30% missingness)
+  - Mean imputation for remaining nulls
+  - Scaling and normalization for classification
+
+## 🤖 Classifiers Trained
+
+- Logistic Regression ✅ (Best overall)
+- Random Forest
+- Decision Tree
+- Gaussian Naive Bayes  
+Each model was trained and evaluated with:
+- 80/20 train-test split (stratified)
+- 5-fold cross-validation
+- Accuracy, Precision, Recall, F1-Score, and macro-averaged metrics
+
+## ✅ Results
+
+| Chunking Level | Best Model        | Test Accuracy | Macro F1 |
+|----------------|-------------------|---------------|----------|
+| Sentence       | Logistic Regression | 55.79%       | 55.77%   |
+| 5-Line Chunk   | Logistic Regression | 64.97%       | 64.96%   |
+
+- Chunked input significantly improved performance due to richer contextual representation.
+- All experiments were logged, versioned, and visualized for reproducibility.
+
+
+## 🧭 Future Work
+
+- Integrate contextual embeddings (e.g., BERT, XLM-R)
+- Explore alignment-based and semi-supervised learning
+- Perform feature attribution (e.g., SHAP, permutation importance)
+- Extend pipeline to multilingual settings
+- Apply domain adaptation to test generalization across genres
+
+## 📣 Citation
+
+If referencing this project in academic or applied research, please cite:
+
+**Kaygalak, Yasmin Lorin.** *Translationese Detection via Linguistic Feature Engineering and Machine Learning*. Villanova University, 2025.
+
+
+
